@@ -181,27 +181,27 @@ public class UploadFileSetToS3Task extends AWSAntTask {
 //                    	System.out.println("base directory path: "+keyBase+"...");
                     	
                     	
-                    	String path = file.getPath();
-                    	int indexOfWar=path.indexOf("war/");
-                		
-                		path = path.substring(indexOfWar,path.length());
-                		
+//                    	String path = file.getPath();
+//                    	int indexOfWar=path.indexOf("war/");
+//                		
+//                		path = path.substring(indexOfWar,path.length());
+//                		
                 		
 //                		if(Pattern.matches("geeksforge*ks", 
 //                                "geeksforgeeks")) {
 //                			
 //                		}
                 		
-                		if(path.contains("/classes/") || path.contains(".class")) {
-                			System.out.println("Skipping class file " + file.getName()
-                            + "...");
-                			continue;
-                		}
-                		
+//                		if(path.contains("/classes/") || path.contains(".class")) {
+//                			System.out.println("Skipping class file " + file.getName()
+//                            + "...");
+//                			continue;
+//                		}
+//                		
 //                    	if(path.indexOf(''war))
-                    	System.out.println("file path:"+path);
-                        System.out.println("Uploading file " + file.getName()
-                                + "...");
+//                    	System.out.println("file path:"+path);
+//                        System.out.println("Uploading file " + file.getName()
+//                                + "...");
                         
                         
                 		
@@ -211,33 +211,33 @@ public class UploadFileSetToS3Task extends AWSAntTask {
                 		
                         
 //                        Upload upload = transferManager.upload(bucketName, key, file);
-                        Upload upload = transferManager.upload(new PutObjectRequest(bucketName, path, file).withCannedAcl((CannedAccessControlList.PublicRead)));
+//                        Upload upload = transferManager.upload(new PutObjectRequest(bucketName, path, file).withCannedAcl((CannedAccessControlList.PublicRead)));
                         
-//                    	MultipleFileUpload mulupload = transferManager.uploadDirectory(bucketName, keyBase, base, true, null, null, cannedAclProvider);
+                    	MultipleFileUpload mulupload = transferManager.uploadDirectory(bucketName, keyBase, base, true, null, null, cannedAclProvider);
                     	
 //                        Upload upload = transferManager.upload(bucketName, key, file);
-                        if (printStatusUpdates) {
-                            while (!upload.isDone()) {
-                                System.out.print(upload.getProgress()
-                                        .getBytesTransferred()
-                                        + "/"
-                                        + upload.getProgress()
-                                                .getTotalBytesToTransfer()
-                                        + " bytes transferred...\r");
-                                Thread.sleep(statusUpdatePeriodInMs);
-                            }
-                            System.out.print(upload.getProgress()
-                                        .getBytesTransferred()
-                                        + "/"
-                                        + upload.getProgress()
-                                                .getTotalBytesToTransfer()
-                                        + " bytes transferred...\n");
-                        } else {
-                            upload.waitForCompletion();
-                        }
-//                    	mulupload.waitForCompletion();
+//                        if (printStatusUpdates) {
+//                            while (!upload.isDone()) {
+//                                System.out.print(upload.getProgress()
+//                                        .getBytesTransferred()
+//                                        + "/"
+//                                        + upload.getProgress()
+//                                                .getTotalBytesToTransfer()
+//                                        + " bytes transferred...\r");
+//                                Thread.sleep(statusUpdatePeriodInMs);
+//                            }
+//                            System.out.print(upload.getProgress()
+//                                        .getBytesTransferred()
+//                                        + "/"
+//                                        + upload.getProgress()
+//                                                .getTotalBytesToTransfer()
+//                                        + " bytes transferred...\n");
+//                        } else {
+//                            upload.waitForCompletion();
+//                        }
+                    	mulupload.waitForCompletion();
                         System.out.println("Upload succesful");
-//                        break;
+                        break;
                     } catch (Exception e) {
                         if (!continueOnFail) {
                             throw new BuildException(
