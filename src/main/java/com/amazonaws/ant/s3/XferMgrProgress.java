@@ -166,7 +166,7 @@ public class XferMgrProgress {
 
     public static void uploadDirWithSubprogress(String awsAccessKeyId, String awsSecretKey, String dir_path,
                                                 String bucket_name, String key_prefix, boolean recursive,
-                                                boolean pause) {
+                                                boolean pause, ObjectMetadataProvider metadataProvider, ObjectTaggingProvider taggingProvider, ObjectCannedAclProvider cannedAclProvider) {
         System.out.println("directory: " + dir_path + (recursive ?
                 " (recursive)" : "") + (pause ? " (pause)" : ""));
 
@@ -184,7 +184,7 @@ public class XferMgrProgress {
         TransferManager xfer_mgr = new TransferManager(s3Client);
         try {
             MultipleFileUpload multi_upload = xfer_mgr.uploadDirectory(
-                    bucket_name, key_prefix, new File(dir_path), recursive);
+                    bucket_name, key_prefix, new File(dir_path), recursive, metadataProvider, taggingProvider, cannedAclProvider);
             // loop with Transfer.isDone()
             XferMgrProgress.showMultiUploadProgress(multi_upload);
             // or block with Transfer.waitForCompletion()
