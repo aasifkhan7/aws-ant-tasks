@@ -304,7 +304,9 @@ public class UploadFileSetToS3Task extends AWSAntTask {
 //                        Upload upload = transferManager.upload(new PutObjectRequest(bucketName, path, file).withCannedAcl((CannedAccessControlList.PublicRead)));
                         
 //                    	XferMgrProgress.uploadDirWithSubprogress("war", bucketName, keyPrefix, true, false);
-                    	XferMgrProgress.uploadDirWithSubprogress("war", bucketName, "war", true, false);
+                    	
+                    	
+                    	XferMgrProgress.uploadDirWithSubprogress(awsAccessKeyId, awsSecretKey, "war", bucketName, "war", true, false);
                     	
 //                    	MultipleFileUpload mulupload = transferManager.uploadDirectory(bucketName, keyBase, base, true, null, null, cannedAclProvider);
 //                    	mulupload.addProgressListener(new ProgressListener(){
