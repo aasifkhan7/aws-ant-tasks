@@ -303,12 +303,16 @@ public class UploadFileSetToS3Task extends AWSAntTask {
 //                        Upload upload = transferManager.upload(bucketName, key, file);
 //                        Upload upload = transferManager.upload(new PutObjectRequest(bucketName, path, file).withCannedAcl((CannedAccessControlList.PublicRead)));
                         
-                    	MultipleFileUpload mulupload = transferManager.uploadDirectory(bucketName, keyBase, base, true, null, null, cannedAclProvider);
-                    	mulupload.addProgressListener(new ProgressListener(){
-                            public void progressChanged(ProgressEvent progressEvent) {
-                                System.out.println("Transferred bytes: " + progressEvent.getBytesTransferred());
-                            }
-                        });
+                    	XferMgrProgress.uploadDirWithSubprogress("war", bucketName, keyPrefix, true, false);
+                    	
+//                    	MultipleFileUpload mulupload = transferManager.uploadDirectory(bucketName, keyBase, base, true, null, null, cannedAclProvider);
+//                    	mulupload.addProgressListener(new ProgressListener(){
+//                            public void progressChanged(ProgressEvent progressEvent) {
+//                                System.out.println("Transferred bytes: " + progressEvent.getBytesTransferred());
+//                            }
+//                        });
+                    	
+                    	
 //                    	ProgressEvent progressEvent = new ProgressEvent;
 //                    	ProgressListener progressListener = progressEvent -> System.out.println(
 //                    			  "Transferred bytes: " + progressEvent.getBytesTransferred());
