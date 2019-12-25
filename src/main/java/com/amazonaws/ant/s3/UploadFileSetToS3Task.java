@@ -27,6 +27,8 @@ import com.amazonaws.ant.AWSAntTask;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.BasicSessionCredentials;
+import com.amazonaws.event.ProgressEvent;
+import com.amazonaws.event.ProgressListener;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -302,7 +304,15 @@ public class UploadFileSetToS3Task extends AWSAntTask {
 //                        Upload upload = transferManager.upload(new PutObjectRequest(bucketName, path, file).withCannedAcl((CannedAccessControlList.PublicRead)));
                         
                     	MultipleFileUpload mulupload = transferManager.uploadDirectory(bucketName, keyBase, base, true, null, null, cannedAclProvider);
-                    	
+                    	mulupload.addProgressListener(new ProgressListener(){
+                            public void progressChanged(ProgressEvent progressEvent) {
+                                System.out.println("Transferred bytes: " + progressEvent.getBytesTransferred());
+                            }
+                        });
+//                    	ProgressEvent progressEvent = new ProgressEvent;
+//                    	ProgressListener progressListener = progressEvent -> System.out.println(
+//                    			  "Transferred bytes: " + progressEvent.getBytesTransferred());
+//                    	mulupload.addProgressListener(listener);
 //                        Upload upload = transferManager.upload(bucketName, key, file);
 //                        if (printStatusUpdates) {
 //                            while (!upload.isDone()) {
