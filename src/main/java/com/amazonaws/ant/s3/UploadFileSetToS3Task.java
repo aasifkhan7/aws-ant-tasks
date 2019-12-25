@@ -337,10 +337,11 @@ public class UploadFileSetToS3Task extends AWSAntTask {
 //                        } else {
 //                            upload.waitForCompletion();
 //                        }
-                    	XferMgrProgress.showTransferProgress(mulupload);
+                  
+//                    	XferMgrProgress.showTransferProgress(mulupload);
                       // or block with Transfer.waitForCompletion()
-                    	XferMgrProgress.waitForCompletion(mulupload);
-                    	mulupload.waitForCompletion();
+//                    	XferMgrProgress.waitForCompletion(mulupload);
+//                    	mulupload.waitForCompletion();
                         System.out.println("Upload succesful");
                         break;
                     } catch (Exception e) {
