@@ -22,14 +22,22 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.ant.AWSAntTask;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.BasicSessionCredentials;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.transfer.MultipleFileUpload;
 import com.amazonaws.services.s3.transfer.ObjectCannedAclProvider;
 import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.Upload;
+import com.amazonaws.services.s3.transfer.TransferManagerBuilder;
 
 /**
  * Ant Task for uploading a fileset or filesets to S3.
@@ -144,11 +152,54 @@ public class UploadFileSetToS3Task extends AWSAntTask {
 	public void execute() {
         checkParameters();
         TransferManager transferManager;
+        
+//        AmazonS3ClientBuilder
+//				.standard()
+//				.withRegion("us-east-1")
+//				.withClientConfiguration(new ClientConfiguration().withMaxConnections(100)
+//                .withConnectionTimeout(120 * 1000)
+//                .withMaxErrorRetry(15))
+//				.build();
+        
+        
+        BasicAWSCredentials awsCreds = new BasicAWSCredentials(awsAccessKeyId, awsSecretKey);
+        AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
+                                .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
+//                                .withRegion("us-east-1")
+                                .withRegion(Regions.US_EAST_1)
+                                .build();
+//        s3Client.putObject(
+//        		  bucketName, 
+//        		  "war", 
+//        		  
+//        		);
+        
+//        AmazonS3 amazonS3 = AmazonS3ClientBuilder
+//        		  .standard()
+//        		  .withCredentials(new DefaultAWSCredentialsProviderChain())
+//        		  .withRegion(Regions.DEFAULT_REGION)
+//        		  .build();
+        
         if (awsSecretKey != null && awsAccessKeyId != null) {
-            transferManager = new TransferManager(getOrCreateClient(AmazonS3Client.class));
+//        	transferManager = new TransferManager(AmazonS3ClientBuilder
+//    				.standard()
+//    				.withRegion("us-east-1")
+////    				.withClientConfiguration(new ClientConfiguration().withMaxConnections(100)
+////                    .withConnectionTimeout(120 * 1000)
+////                    .withMaxErrorRetry(15))
+//    				.build());
+//            transferManager = new TransferManager(getOrCreateClient(AmazonS3Client.class));
+        	transferManager = new TransferManager(s3Client);
+        	
         } else {
             transferManager = new TransferManager();
         }
+        
+//        if (awsSecretKey != null && awsAccessKeyId != null) {
+//            transferManager = new TransferManager(getOrCreateClient(AmazonS3Client.class));
+//        } else {
+//            transferManager = new TransferManager();
+//        }
         
         if(keyPrefix==null) {
     		keyPrefix = "";
@@ -164,6 +215,36 @@ public class UploadFileSetToS3Task extends AWSAntTask {
     	
         
         
+        
+        
+        
+        
+        
+        
+//        TransferManager xfer_mgr = new TransferManager(getOrCreateClient(AmazonS3Client.class));
+////        TransferManager xfer_mgr = TransferManagerBuilder.stand	ard().build();
+//        
+//        
+//        try {
+//            MultipleFileUpload xfer = xfer_mgr.uploadDirectory(bucketName,
+//            		keyPrefix, new File("war"), true);
+//            // loop with Transfer.isDone()
+//            XferMgrProgress.showTransferProgress(xfer);
+//            // or block with Transfer.waitForCompletion()
+//            XferMgrProgress.waitForCompletion(xfer);
+//        } catch (AmazonServiceException e) {
+//            System.err.println(e.getErrorMessage());
+//            System.exit(1);
+//        }
+//        xfer_mgr.shutdownNow();
+//        
+//        if(true)return;
+        
+        
+        
+        
+        
+        
         for (FileSet fileSet : filesets) {
             DirectoryScanner directoryScanner = fileSet.getDirectoryScanner(getProject());
             String[] includedFiles = directoryScanner.getIncludedFiles();
@@ -175,6 +256,13 @@ public class UploadFileSetToS3Task extends AWSAntTask {
                     String key = keyPrefix + file.getName();
                     
                     String keyBase = keyPrefix + base.getName();
+                    
+                    
+                    
+                    
+                    
+                    
+                    
                     
                     try {
 //                    	System.out.println("base directory path:"+base.getPath());
