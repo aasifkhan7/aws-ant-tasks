@@ -15,8 +15,13 @@ package com.amazonaws.ant.s3;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.event.ProgressEvent;
 import com.amazonaws.event.ProgressListener;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.transfer.*;
 import com.amazonaws.services.s3.transfer.Transfer.TransferState;
 
@@ -159,13 +164,24 @@ public class XferMgrProgress {
         xfer_mgr.shutdownNow();
     }
 
-    public static void uploadDirWithSubprogress(String dir_path,
+    public static void uploadDirWithSubprogress(String awsAccessKeyId, String awsSecretKey, String dir_path,
                                                 String bucket_name, String key_prefix, boolean recursive,
                                                 boolean pause) {
         System.out.println("directory: " + dir_path + (recursive ?
                 " (recursive)" : "") + (pause ? " (pause)" : ""));
 
-        TransferManager xfer_mgr = new TransferManager();
+        
+        BasicAWSCredentials awsCreds = new BasicAWSCredentials(awsAccessKeyId, awsSecretKey);
+        AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
+                                .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
+//                                .withRegion("us-east-1")
+                                .withRegion(Regions.US_EAST_1)
+                                .build();
+
+        
+        
+        
+        TransferManager xfer_mgr = new TransferManager(s3Client);
         try {
             MultipleFileUpload multi_upload = xfer_mgr.uploadDirectory(
                     bucket_name, key_prefix, new File(dir_path), recursive);
@@ -233,15 +249,15 @@ public class XferMgrProgress {
         String local_path = args[cur_arg];
 
         // check to see if local path is a directory or file...
-        File f = new File(args[cur_arg]);
-        if (f.exists() == false) {
-            System.out.println("Input path doesn't exist: " + args[cur_arg]);
-            System.exit(1);
-        } else if (f.isDirectory()) {
-            uploadDirWithSubprogress(local_path, bucket_name, key_prefix,
-                    recursive, pause);
-        } else {
-            uploadFileWithListener(local_path, bucket_name, key_prefix, pause);
-        }
+//        File f = new File(args[cur_arg]);
+//        if (f.exists() == false) {
+//            System.out.println("Input path doesn't exist: " + args[cur_arg]);
+//            System.exit(1);
+//        } else if (f.isDirectory()) {
+//            uploadDirWithSubprogress(local_path, bucket_name, key_prefix,
+//                    recursive, pause);
+//        } else {
+//            uploadFileWithListener(local_path, bucket_name, key_prefix, pause);
+//        }
     }
 }
