@@ -125,7 +125,7 @@
 						<goals>
 							<goal>shade</goal>
 						</goals>
-						<configuration>
+						<!--<configuration>
 							<minimizeJar>false</minimizeJar>
 							<artifactSet>
 								<includes>
@@ -138,7 +138,7 @@
 									<include>joda-time:joda-time</include>
 								</includes>
 							</artifactSet>
-						</configuration>
+						</configuration>-->
 					</execution>
 				</executions>
 			</plugin>
